@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -36,6 +37,12 @@ class FlightControllerTest {
 
     @Test
     void getFlights() throws Exception{
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate date = LocalDate.of(2018, 5, 2);
+        String text = date.format(formatter);
+
+        System.out.println(text);
+
         Flight flight1 = new Flight();
         flight1.setId(1L);
         flight1.setFlightNumber("AA1");
@@ -43,7 +50,7 @@ class FlightControllerTest {
         flight1.setDepartureCity("AUS");
         flight1.setDepartureCity("NYC");
         flight1.setArrivalCity("AUS");
-//        flight1.setDateOfDeparture(LocalDate.parse("02-05-2018"));
+        flight1.setDateOfDeparture(LocalDate.parse(text,formatter));
 //        flight1.setEstimatedDepartureTime(LocalDateTime.parse("2018-02-05 03:14:07"));
 
         List<Flight> flights = List.of(flight1);
@@ -53,6 +60,7 @@ class FlightControllerTest {
         mockMvc.perform(get("/flights"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].flightNumber",is(equalTo("AA1"))))
+                .andExpect(jsonPath("$[0].dateOfDeparture",is(equalTo("2018-05-02"))))
                 .andDo(print());
     }
 }
