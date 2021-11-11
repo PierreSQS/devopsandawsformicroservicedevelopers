@@ -1,12 +1,11 @@
 package com.bharath.springcloud.model;
 
-import java.sql.Date;
-import java.sql.Time;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Flight {
@@ -18,8 +17,8 @@ public class Flight {
 	private String operatingAirlines;
 	private String departureCity;
 	private String arrivalCity;
-	private Date dateOfDeparture;
-	private Time estimatedDepartureTime;
+	private LocalDate dateOfDeparture;
+	private LocalDateTime estimatedDepartureTime;
 
 	public Long getId() {
 		return id;
@@ -53,19 +52,19 @@ public class Flight {
 		this.arrivalCity = arrivalCity;
 	}
 
-	public Date getDateOfDeparture() {
+	public LocalDate getDateOfDeparture() {
 		return dateOfDeparture;
 	}
 
-	public void setDateOfDeparture(Date dateOfDeparture) {
+	public void setDateOfDeparture(LocalDate dateOfDeparture) {
 		this.dateOfDeparture = dateOfDeparture;
 	}
 
-	public Time getEstimatedDepartureTime() {
+	public LocalDateTime getEstimatedDepartureTime() {
 		return estimatedDepartureTime;
 	}
 
-	public void setEstimatedDepartureTime(Time estimatedDepartureTime) {
+	public void setEstimatedDepartureTime(LocalDateTime estimatedDepartureTime) {
 		this.estimatedDepartureTime = estimatedDepartureTime;
 	}
 
