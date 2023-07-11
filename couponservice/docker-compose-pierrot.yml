@@ -10,7 +10,17 @@ services:
             WAIT_HOSTS: mysql:3306
         depends_on: 
             - mysql 
-
+    productservice:
+        container_name: productservice
+        image: productservice-img
+        restart: on-failure
+        ports:
+            - 9090:9090
+        environment:
+            WAIT_HOSTS: mysql:3306
+        depends_on:
+            - mysql
+            - couponservice
     mysql:
         container_name: bharath-mysql
         image: mysql
