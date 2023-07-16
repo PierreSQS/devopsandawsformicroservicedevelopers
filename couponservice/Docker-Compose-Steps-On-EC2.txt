@@ -1,0 +1,66 @@
+### Check and Install Docker on EC2 ###
+sudo dnf list --available
+sudo dnf list --installed
+sudo dnf install docker
+
+### Start Docker as a Service on EC2 ###
+sudo service docker start
+ps -aux | grep docker
+
+### Start Docker as a Service on EC2 ### (optional Step as example)
+sudo service docker stop
+
+### Check whether Docker started as a Service on EC2 ### (optional Step as example)
+ps -aux | grep docker
+sudo docker info
+
+### Install Docker Compose manually ###
+DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+mkdir -p $DOCKER_CONFIG/cli-plugins
+curl -SL https://github.com/docker/compose/releases/download/v2.19.1/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+### Create a Development Directory ### (optional Step as example)
+mkdir bharath-lab
+ls -ltr
+cd bharath-lab/
+mkdir target
+
+### Copy the necessary project files (Scripts, Docker files and jars) ###
+aws s3 cp s3://pierrot-frankfurt-s3-bucket/aws-bharath-lab.sql . 
+cat aws-bharath-lab.sql
+aws s3 cp s3://pierrot-frankfurt-s3-bucket/couponservice-0.0.1-SNAPSHOT.jar target
+aws s3 cp s3://pierrot-frankfurt-s3-bucket/productservice-0.0.1-SNAPSHOT.jar target
+aws s3 cp s3://pierrot-frankfurt-s3-bucket/Dockerfile-Coupon .
+aws s3 cp s3://pierrot-frankfurt-s3-bucket/Dockerfile-Product .
+aws s3 cp s3://pierrot-frankfurt-s3-bucket/docker-compose-pierrot.yml .
+cat docker-compose-pierrot.yml
+cat Dockerfile-Coupon 
+cat Dockerfile-Product 
+ls -ltr target
+
+### Start the MySQL Container ###
+sudo docker run -d -p 6666:3306 --name=bharath-mysql --env="MYSQL_ROOT_PASSWORD=Galerien3?" --env="MYSQL_DATABASE=aws-bharath-db" mysql
+sudo docker exec -i bharath-mysql mysql -uroot -pGalerien3? aws-bharath-db <  aws-bharath-lab.sql
+
+### Build the Other App Services (CouponService,ProductService) ###
+sudo docker images
+sudo docker build -f Dockerfile-Coupon -t couponservice-img .
+sudo docker build -f Dockerfile-Product -t productservice-img .
+sudo docker images
+
+### Start Docker Compose ###
+sudo docker compose -f docker-compose-pierrot.yml up -d
+
+### Save bash history on S3 ### (optional Step as example)
+aws s3 cp ../.bash_history s3://pierrot-frankfurt-s3-bucket/.bash_history-linux-amazon-2023
+
+### Misc. Start, Stop and Logging Options of the App ### (optional Step as example)
+docker compose -f docker-compose-pierrot.yml  logs couponservice
+docker compose -f docker-compose-pierrot.yml  stop mysql
+docker compose -f docker-compose-pierrot.yml  start mysql
+docker container start couponservice
+docker container logs couponservice
+docker container stop couponservice
+exit

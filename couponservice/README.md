@@ -11,6 +11,6 @@ Following the steps on an AWS-EC2 instance (Linux Amazon 2023) on my AWS-Account
 - Build the containers
 - Start Docker Compose
 
-The detailled steps can be found in the text-file Docker-Compose-Steps-On-EC2.txt
+The detailed steps can be found in the text-file Docker-Compose-Steps-On-EC2.txt
 
 under the project's root.
